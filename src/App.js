@@ -4,6 +4,9 @@ import './App.css';
 import ChartComp from "./components/chartComp";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import Chart from "chart.js";
+import {createRef} from "react/cjs/react.production.min";
+import {Line} from "react-chartjs-2";
 
 
 class App extends React.Component {
@@ -24,39 +27,53 @@ class App extends React.Component {
   ];
   constructor(props) {
     super(props);
-    this.state = {currentProv: {value: 'BC', label: 'British Columbia'}}
+    this.state = {currentProv: {value: 'BC', label: 'British Columbia'}, data: {}}
+    void this.getData(this.state.currentProv);
+    document.title = `You clicked ${this.state.currentProv.value} times`;
     this.defaultOption = this.state.currentProv;
+    this.chartRef = createRef();
   }
 
   _onSelect = (prov) => {
+    console.log('priv', prov);
     this.setState({currentProv: prov})
+    void this.getData(prov);
   }
+
+  async getData(prov) {
+    const url = `https://api.opencovid.ca/timeseries?loc=${prov.value}&stat=avaccine`
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log('days', data.avaccine);
+    const labels = []
+    const vacData = []
+    data.avaccine.forEach(day => {
+      labels.push(day.date_vaccine_administered)
+      vacData.push((day.cumulative_avaccine/5071000)*100)
+    })
+    console.log(labels, vacData)
+    const dataState = {labels: labels, datasets: [{label: 'Vaccine', backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: vacData}]}
+    this.setState({data: dataState})
+  }
+
+  componentDidUpdate() {
+    document.title = `You clicked ${this.state.currentProv.value} times`;
+  }
+
 
 
   render() {
 
 
 
-
-
     return (
         <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
             <Dropdown options={this.province_codes} onChange={this._onSelect} value={this.defaultOption}
-                      placeholder="Select an option"/>;
-            <ChartComp prov={this.state.currentProv.value}/>
+                      placeholder="Select an option"/>
+                      <Line ref={this.chartRef} data={this.state.data}/>
           </header>
         </div>
     );
