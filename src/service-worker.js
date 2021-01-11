@@ -68,5 +68,20 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.open('mysite-dynamic').then(function(cache) {
+            return cache.match(event.request).then(function (response) {
+                return fetch(event.request).then(function(response) {
+                    cache.put(event.request, response.clone());
+                    return response;
+                }).catch(() => {
+                    return response;
+                })
+
+            });
+        })
+    );
+});
 
 // Any other custom service worker logic can go here.
