@@ -13,6 +13,7 @@ class ChartComp extends React.Component {
                 },
 
                 ticks: {
+                    maxTicksLimit : (window.innerHeight/150),
                     // Include a dollar sign in the ticks
                     callback: function (value, index, values) {
                         return value + '%';
@@ -31,7 +32,9 @@ class ChartComp extends React.Component {
     render() {
 
         return (
-            <Line ref={this.chartRef} data={this.props.data} options={this.chartOptions}/>
+            <div>
+                <Line ref={this.chartRef} data={this.props.data} options={this.chartOptions}/>
+            </div>
 
         );
     }

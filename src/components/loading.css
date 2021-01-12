@@ -1,0 +1,9 @@
+.spinner {
+    display: block;
+    position: fixed;
+    z-index: 1031; /* High z-index so it is on top of the page */
+    top: calc( 50% - ( 25vmin / 2) ); /* where ... is the element's height */
+    right: calc( 50% - ( 25vmin / 2) ); /* where ... is the element's width */
+    width: 25vmin;
+    height: 25vmin;
+}
