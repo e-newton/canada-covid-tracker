@@ -8,6 +8,8 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.4",
+    "firebase": "^8.2.2",
+    "firebase-tools": "^9.2.0",
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.1",
@@ -32,6 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "deploy": "react-scripts build && firebase deploy",
     "pwa-dev": "react-scripts build && serve -s build"
   },
   "eslintConfig": {
